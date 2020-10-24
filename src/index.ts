@@ -18,8 +18,8 @@ const server = new ApolloServer({
 
     return { db };
   },
-  typeDefs,
-  resolvers: userResolvers
+  typeDefs: [typeDefs],
+  resolvers: [userResolvers]
 });
 
 server

@@ -10,8 +10,12 @@ export const typeDefs = gql`
         name: String 
     }
 
+    input GerUserInput {
+        username: String!
+    }
+
     type Query {
-        getUser: User
+        getUser(getUserInput: GerUserInput): User
         getUserByName(input: userInput): User
     }
 `;
