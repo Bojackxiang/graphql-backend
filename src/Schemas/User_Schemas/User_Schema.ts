@@ -1,7 +1,7 @@
 
 import {gql} from 'apollo-server'
 
-export const typeDefs = gql`
+export const USER_SCHEMAS = gql`
     input userInput {
         name: String
     } 
