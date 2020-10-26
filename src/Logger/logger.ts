@@ -1,14 +1,16 @@
 import log4js from "log4js";
-import config from '../Configs/logger.json'
-
-log4js.configure(config);
+import config from "../Configs/logger.json";
 
 export default class Logger {
-  static writeError(message: any) {
+  constructor() {
+    log4js.configure(config);
+  }
+  
+  writeError(message: any) {
     log4js.getLogger("errors").error(message);
   }
 
-  static writeTrace(message: any) {
+  writeTrace(message: any) {
     log4js.getLogger("app").trace(message);
   }
 }

@@ -5,12 +5,14 @@ import { USER_SCHEMAS } from "./Schemas/User_Schemas/User_Schema";
 // const typeDefs = require("./schema"); // 定义了 上！
 import { userResolvers } from "./Resolvers/User_Resolvers/resolvers";
 import DBUtils from "./DB/connection";
+import Logger from "./Logger/logger";
 
 const server = new ApolloServer({
   context: async () => {
     const db = await DBUtils.connection();
+    const logger = new Logger();
 
-    return { db };
+    return { db, logger };
   },
   typeDefs: [USER_SCHEMAS],
   resolvers: [userResolvers],

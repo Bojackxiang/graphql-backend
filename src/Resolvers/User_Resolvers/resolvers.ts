@@ -4,9 +4,9 @@ import { getUserArgs, getUserContext } from "../../types/userResolverTypes";
 
 export const userResolvers: IResolvers<any, any> = {
   Query: {
-    getUser: async (parent, args: getUserArgs, { db }: getUserContext) => {
-      Logger.writeError("this is an error");
-      Logger.writeTrace("this is a message");
+    getUser: async (parent, args: getUserArgs, { db, logger }: getUserContext) => {
+      logger.writeError("this is an error");
+      logger.writeTrace("this is a message");
 
       const foundUser = await db.collection("users").find().toArray();
       console.log(foundUser);
