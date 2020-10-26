@@ -1,9 +1,14 @@
-import log4js from 'log4js'
+import log4js from "log4js";
+import config from '../Configs/logger.json'
 
-log4js.configure({
-  appenders: { cheese: { type: "file", filename: "cheese.log" } },
-  categories: { default: { appenders: ["cheese"], level: "error" } }
-});
+log4js.configure(config);
 
+export default class Logger {
+  static writeError(message: any) {
+    log4js.getLogger("errors").error(message);
+  }
 
-export const logger = log4js.getLogger('cheese');
+  static writeTrace(message: any) {
+    log4js.getLogger("app").trace(message);
+  }
+}
