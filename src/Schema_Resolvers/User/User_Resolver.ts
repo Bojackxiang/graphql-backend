@@ -1,27 +1,25 @@
 import { IResolvers } from "apollo-server";
 import { getUserArgs, getUserContext } from "../../types/userResolverTypes";
-import {gql} from 'apollo-server'
+import { gql } from "apollo-server";
 
 export const USER_SCHEMAS = gql`
-    input userInput {
-        name: String
-    } 
+  input userInput {
+    name: String
+  }
 
-    type User {
-        name: String 
-    }
+  type User {
+    name: String
+  }
 
-    input GerUserInput {
-        username: String!
-    }
+  input GerUserInput {
+    username: String!
+  }
 
-    type Query {
-        getUser(getUserInput: GerUserInput): User
-        getUserByName(input: userInput): Response
-    }
+  type Query {
+    getUser(getUserInput: GerUserInput): User
+    getUserByName(input: userInput): Response
+  }
 `;
-
-
 
 export const USER_RESOLVER: IResolvers<any, any> = {
   Query: {
@@ -39,12 +37,11 @@ export const USER_RESOLVER: IResolvers<any, any> = {
         name: "alex",
       };
     },
-    getUserByName(parent, args: any, ){
+    getUserByName(parent, args: any) {
       return {
-        message: 'test',
-        success: true, 
-
-      }
-    }
+        message: "test",
+        success: true,
+      };
+    },
   },
 };

@@ -5,15 +5,17 @@ export const FILE_UPLOADING_SCHEMA = gql`
     test: String
   }
 
-  type Query {
+  extend type Query {
     getFile: Test
   }
 `;
 
 export const FILE_UPLOADING_RESOLVER: IResolvers<any, any> = {
-  getFile: () => {
-    return {
-      test: "test",
-    };
+  Query: {
+    getFile: () => {
+      return {
+        test: "test",
+      };
+    },
   },
 };
