@@ -1,5 +1,5 @@
 import { IResolvers } from "apollo-server";
-import { getUserArgs, getUserContext } from "../../types/userResolverTypes";
+import { getUserArgs, contextType } from "../../types/userResolverTypes";
 import { gql } from "apollo-server";
 
 export const USER_SCHEMAS = gql`
@@ -26,7 +26,7 @@ export const USER_RESOLVER: IResolvers<any, any> = {
     getUser: async (
       parent,
       args: getUserArgs,
-      { db, logger }: getUserContext
+      { db, logger }: contextType
     ) => {
       // logger.writeError("this is an error");
       logger.writeTrace("this is a message");

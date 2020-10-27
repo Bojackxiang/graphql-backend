@@ -3,5 +3,5 @@ import { Db } from "mongodb";
 
 
 // query.getUser
-export type getUserContext = {db: Db, logger: Logger}
+export type contextType = {db: Db, logger: Logger}
 export type getUserArgs = {username: string}
