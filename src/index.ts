@@ -1,11 +1,16 @@
 require("dotenv").config();
 
 import { ApolloServer } from "apollo-server";
-import { USER_SCHEMAS } from "./Schemas/User_Schemas/User_Schema";
 // const typeDefs = require("./schema"); // 定义了 上！
-import { userResolvers } from "./Resolvers/User_Resolvers/resolvers";
+import {
+  USER_RESOLVER,
+  USER_SCHEMAS,
+} from "./Schema_Resolvers/User/User_Resolver";
 import DBUtils from "./DB/connection";
 import Logger from "./Logger/logger";
+import { resolvers, schemas } from "./Schema_Resolvers";
+
+
 
 const server = new ApolloServer({
   context: async () => {
@@ -14,8 +19,8 @@ const server = new ApolloServer({
 
     return { db, logger };
   },
-  typeDefs: [USER_SCHEMAS],
-  resolvers: [userResolvers],
+  typeDefs: schemas,
+  resolvers: resolvers,
 });
 
 server
