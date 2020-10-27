@@ -8,6 +8,8 @@ export const FILE_UPLOADING_SCHEMA = gql`
   extend type Query {
     getFile: Test
   }
+
+  
 `;
 
 export const FILE_UPLOADING_RESOLVER: IResolvers<any, any> = {

@@ -15,7 +15,7 @@ export const USER_SCHEMAS = gql`
     username: String!
   }
 
-  type Query {
+  extend type Query {
     getUser(getUserInput: GerUserInput): User
     getUserByName(input: userInput): Response
   }
@@ -28,7 +28,7 @@ export const USER_RESOLVER: IResolvers<any, any> = {
       args: getUserArgs,
       { db, logger }: getUserContext
     ) => {
-      logger.writeError("this is an error");
+      // logger.writeError("this is an error");
       logger.writeTrace("this is a message");
 
       const foundUser = await db.collection("users").find().toArray();
