@@ -1,4 +1,4 @@
-import Logger from "../Logger/logger";
+import Logger from "../Utils/Logger/logger";
 import { Db } from "mongodb";
 
 

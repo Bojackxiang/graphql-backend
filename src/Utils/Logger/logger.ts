@@ -1,5 +1,5 @@
 import log4js from "log4js";
-import config from "../Configs/logger.json";
+import config from "../../Configs/logger.json";
 
 export default class Logger {
   constructor() {

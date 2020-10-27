@@ -6,8 +6,8 @@ import {
   USER_RESOLVER,
   USER_SCHEMAS,
 } from "./Schema_Resolvers/User/User_Resolver";
-import DBUtils from "./DB/connection";
-import Logger from "./Logger/logger";
+import DBUtils from "./Utils/DB/connection";
+import Logger from "./Utils/Logger/logger";
 import { resolvers, schemas } from "./Schema_Resolvers";
 
 
