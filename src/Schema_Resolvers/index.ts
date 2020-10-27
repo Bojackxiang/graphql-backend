@@ -10,7 +10,7 @@ import { USER_SCHEMAS, USER_RESOLVER } from "./User/User_Resolver";
 export const schemas: SchemaTypes = [
   GENERAL_SCHEMA,
   USER_SCHEMAS,
-  FILE_UPLOADING_SCHEMA,
+  FILE_UPLOADING_SCHEMA, 
 ];
 
 export const resolvers: ResolverType = [
