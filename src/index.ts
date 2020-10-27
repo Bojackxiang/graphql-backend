@@ -5,14 +5,10 @@ import { ApolloServer } from "apollo-server";
 import DBUtils from "./Utils/DB/connection";
 import Logger from "./Utils/Logger/logger";
 import { resolvers, schemas } from "./Schema_Resolvers";
+import { contextGenerator } from "./context";
 
 const server = new ApolloServer({
-  context: async () => {
-    const db = await DBUtils.connection();
-    const logger = new Logger();
-
-    return { db, logger };
-  },
+  context: () => contextGenerator(),
   typeDefs: schemas,
   resolvers: resolvers,
 });
