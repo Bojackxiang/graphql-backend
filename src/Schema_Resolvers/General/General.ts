@@ -4,6 +4,8 @@ export const GENERAL_SCHEMA = gql`
   type Response {
     message: String
     success: Boolean
+    updatedId: ID 
+    token: String
   }
   type Query {
     generalQuery: Response
