@@ -6,7 +6,7 @@ enum Role {
 }
 
 export type Type_Create_User = {
-  createUserInput: { name: string; role: Role };
+  createUserInput: { name: string; role: Role, password: string};
 };
 export type Type_Get_All_Users = { parentId?: ObjectId };
 

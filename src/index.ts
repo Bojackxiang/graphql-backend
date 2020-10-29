@@ -7,10 +7,21 @@ import Logger from "./Utils/Logger/logger";
 import { resolvers, schemas } from "./Schema_Resolvers";
 import { contextGenerator } from "./context";
 
+
 const server = new ApolloServer({
-  context: () => contextGenerator(),
+  
+  context: async ({req}) => {
+    const contexts = await contextGenerator()
+    return {...contexts, request: req}
+  },
+
   typeDefs: schemas,
   resolvers: resolvers,
+  playground: {
+    settings: {
+      "request.credentials": "include"
+    }
+  }
 });
 
 server

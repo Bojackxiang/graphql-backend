@@ -2,9 +2,17 @@ import { IResolvers } from "apollo-server";
 import { getUserArgs, contextType } from "../../types/userResolverTypes";
 import { gql } from "apollo-server";
 import Response, { CONST_MESSAGE } from "../../Utils/Response/Response";
-import { Type_Kids_Resolver, Type_Get_All_Users, Type_Create_User } from "./types";
+import {
+  Type_Kids_Resolver,
+  Type_Get_All_Users,
+  Type_Create_User,
+} from "./types";
 import JWT from "../../../src/Utils/JWT/JWT";
-
+import { Redis_GET, Redis_SET } from "../../../src/Utils/Redis/Redis";
+import {
+  encryptionCompare,
+  encryptionPassword,
+} from "../../../src/Utils/Encryption/Encryption";
 
 export const USER_SCHEMAS = gql`
   enum Role {
@@ -30,8 +38,8 @@ export const USER_SCHEMAS = gql`
 
   input CreateUserInput {
     name: String
-    password: String 
-    email: String 
+    password: String
+    email: String
     Role: Role
   }
 
@@ -40,7 +48,7 @@ export const USER_SCHEMAS = gql`
   }
 
   input UserSignInInput {
-    username: String 
+    username: String
     email: String
     password: String
   }
@@ -57,12 +65,11 @@ export const USER_SCHEMAS = gql`
   }
 `;
 
-
 type Type_User_Sign_In = {
-  username: string
-  email: string 
-  password: string
-}
+  username: string;
+  email: string;
+  password: string;
+};
 
 export const USER_RESOLVER: IResolvers<any, any> = {
   User: {
@@ -126,33 +133,76 @@ export const USER_RESOLVER: IResolvers<any, any> = {
       __
     ) => {
       try {
-        const result = await db
-          .collection("users")
-          .insertOne(args.createUserInput);
+        // 创建唯一的数据
+        await db.collection("users").createIndex({ name: 1 }, { unique: true });
+        const result = await db.collection("users").insertOne({
+          ...args.createUserInput,
+          password: await encryptionPassword(args.createUserInput.password),
+        });
+
         return Response.serverResponse({
           success: true,
           message: CONST_MESSAGE.CREATE_USER_SUCCESSFULLY,
           mongo_id: result.insertedId,
         });
       } catch (error) {
+        console.log(error);
         logger.writeError(error);
         return Response.serverResponse({
           success: true,
-          message: CONST_MESSAGE.CREATE_USER_FAILURE,
+          message: error.message,
         });
       }
     },
+
     userSignIn: async (
       _,
-      args: Type_User_Sign_In, 
-      {db, }: contextType
+      { username, email, password }: Type_User_Sign_In,
+      { db, redisClient, request }: contextType
     ) => {
-      // const response = JWT.generateJWT("alex", "alex@gmail.com")
-      // const verifiedResult = await JWT.verifyJWT(response, {username: "alex", email: "gmail"})
+      try {
+        // 缺少需要的信息
+        if (!email || !password) throw new Error(CONST_MESSAGE.INCOMPLETE_INFO);
 
-      // console.log({verifiedResult});
+        // 链接 redis
+        redisClient.on("error", (error) => {
+          throw new Error(`${CONST_MESSAGE.REDIS_ERROR} ${error}`);
+        });
 
-      return Response.serverResponse({message: "success", success: true})
-    }
+        // redis 检查是否存在
+        if (await Redis_GET(redisClient, email)) {
+          // 检查token + 更新 token
+          return Response.serverResponse({
+            message: CONST_MESSAGE.LOGIN_SUCCESS,
+            success: true,
+          });
+        }
+
+        // 检查用户信息,却没有找到用户
+        const user = await db.collection("users").findOne({ email, password });
+
+        if (!user) {
+          throw new Error(CONST_MESSAGE.NO_FOUND_USER);
+        } else {
+          // 用户已经正常额登陆了
+          const isPwCorrect = await encryptionCompare(user.password, password);
+          if (!isPwCorrect) {
+            throw new Error(CONST_MESSAGE.WRONG_PASSWORD);
+          }
+          const token = JWT.generateJWT(username, password);
+          await Redis_SET(redisClient, username, token);
+          return Response.serverResponse({
+            message: CONST_MESSAGE.LOGIN_SUCCESS,
+            success: true,
+            token: token,
+          });
+        }
+      } catch (error) {
+        return Response.serverResponse({
+          message: error.message,
+          success: false,
+        });
+      }
+    },
   },
 };
