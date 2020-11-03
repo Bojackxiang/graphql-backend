@@ -6,6 +6,7 @@ import {
   Type_Kids_Resolver,
   Type_Get_All_Users,
   Type_Create_User,
+  Type_User_Sign_In,
 } from "./types";
 import JWT from "../../../src/Utils/JWT/JWT";
 import { Redis_GET, Redis_SET } from "../../../src/Utils/Redis/Redis";
@@ -13,6 +14,7 @@ import {
   encryptionCompare,
   encryptionPassword,
 } from "../../../src/Utils/Encryption/Encryption";
+import { KidsLoader } from "./dataloader";
 
 export const USER_SCHEMAS = gql`
   enum Role {
@@ -65,22 +67,17 @@ export const USER_SCHEMAS = gql`
   }
 `;
 
-type Type_User_Sign_In = {
-  username: string;
-  email: string;
-  password: string;
-};
-
 export const USER_RESOLVER: IResolvers<any, any> = {
   User: {
     Kids: async ({ _id }: Type_Kids_Resolver, _, { db }: contextType) => {
-      return await db
-        ?.collection("users")
-        .find({
-          role: "KID",
-          parentId: _id.toHexString(),
-        })
-        .toArray();
+      // KidsLoader([_id])
+      // return await db
+      //   ?.collection("users")
+      //   .find({
+      //     role: "KID",
+      //     parentId: _id.toHexString(),
+      //   })
+      //   .toArray();
     },
   },
 

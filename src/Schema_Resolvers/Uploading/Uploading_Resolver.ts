@@ -2,9 +2,16 @@ import { gql, IResolvers } from "apollo-server";
 import { contextType } from "src/types/userResolverTypes";
 
 export const FILE_UPLOADING_SCHEMA = gql`
-  input FileInput {
-    name: String
-    file: FileInput
+  input SingleFileUploadInput {
+    name: String!
+    upload: Upload!
+    userId: String!
+  }
+
+  input MultiFileUploadInput {
+    name: String!
+    upload: [Upload!]!
+    userId: String!
   }
 
   extend type Query {
@@ -12,7 +19,8 @@ export const FILE_UPLOADING_SCHEMA = gql`
   }
 
   extend type Mutation {
-    uploadPDFFile(FileInput: FileInput): Response
+    uploadingSingleFile(FileInput: SingleFileUploadInput): Response
+    uploadingMultiFile(FileInput: SingleFileUploadInput): Response
   }
 `;
 
@@ -25,13 +33,25 @@ export const FILE_UPLOADING_RESOLVER: IResolvers<any, any> = {
     },
   },
   Mutation: {
-    uploadPDFFile: async (root, args: any, {db, logger}: contextType ) => {
-      console.log(args);
-
+    uploadingSingleFile: async (
+      root,
+      args: any,
+      { db, logger }: contextType
+    ) => {
       return {
-        success: true, 
-        message: ""
-      }
-    }
-  }
+        success: true,
+        message: "Upload single file successfully",
+      };
+    },
+    uploadingMultiFile: async (
+      root,
+      args: any,
+      { db, logger, request }: contextType
+    ) => {
+      return {
+        success: true,
+        message: "Upload multiple files successfully",
+      };
+    },
+  },
 };

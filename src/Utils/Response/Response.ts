@@ -9,6 +9,8 @@ export const CONST_MESSAGE = {
   LOGIN_SUCCESS: "成功登陆",
   NO_FOUND_USER: "没有该用户",
   WRONG_PASSWORD: "用户密码错误",
+  CREATE_POST_FAIL: "发布信息失败",
+  CREATE_POST_SUCCESS: "发布信息成功",
 };
 
 export default class Response {
@@ -18,6 +20,7 @@ export default class Response {
 
   static serverResponse(info: ServerResponseInput) {
     return {
+      success: true, 
       ...info,
     };
   }

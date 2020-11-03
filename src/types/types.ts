@@ -8,7 +8,7 @@ export type ResolverType = IResolvers<any, any> | IResolvers<any, any>[] | undef
 
 export type ServerResponseInput = {
     message?: string;
-    success: boolean;
+    success?: boolean;
     mongo_id?: ObjectId;
     token?: string
   };
