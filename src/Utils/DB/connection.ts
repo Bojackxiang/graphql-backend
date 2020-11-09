@@ -8,7 +8,6 @@ class DBUtils {
         useUnifiedTopology: true,
       });
       await client.connect();
-
       return client.db(process.env.DB_NAME);
     } catch (error) {
       console.log(" ❌ DB Connection error ");

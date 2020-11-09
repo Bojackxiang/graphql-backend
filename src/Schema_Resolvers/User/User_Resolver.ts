@@ -154,12 +154,14 @@ export const USER_RESOLVER: IResolvers<any, any> = {
 
     userSignIn: async (
       _,
-      { username, email, password }: Type_User_Sign_In,
+      { userSignInInput: { username, email, password } }: Type_User_Sign_In,
       { db, redisClient, request }: contextType
     ) => {
       try {
+        console.log({ username, email, password });
         // 缺少需要的信息
-        if (!email || !password) throw new Error(CONST_MESSAGE.INCOMPLETE_INFO);
+        if (!(email || username) || !password)
+          throw new Error(CONST_MESSAGE.INCOMPLETE_INFO);
 
         // 链接 redis
         redisClient.on("error", (error) => {
@@ -176,7 +178,11 @@ export const USER_RESOLVER: IResolvers<any, any> = {
         }
 
         // 检查用户信息,却没有找到用户
-        const user = await db.collection("users").findOne({ email, password });
+        const user = await db
+          .collection("users")
+          .findOne({ name: username, email: email });
+
+          console.log(user);
 
         if (!user) {
           throw new Error(CONST_MESSAGE.NO_FOUND_USER);
