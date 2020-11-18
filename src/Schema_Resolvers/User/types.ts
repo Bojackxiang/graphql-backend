@@ -1,12 +1,23 @@
 import { ObjectId } from "mongodb";
 
 enum Role {
-  KID,
-  PARENT,
+  LANDLORD,
+  AGENT,
+  TENANT,
 }
 
 export type Type_Create_User = {
-  createUserInput: { name: string; role: Role; password: string };
+  createUserInput: {
+    username: string;
+    role: Role;
+    password: string;
+    email: string;
+    preferContact: {
+      contactByPhone: boolean;
+      contactByEmail: boolean;
+      contactByMsg: boolean;
+    };
+  };
 };
 export type Type_Get_All_Users = { parentId?: ObjectId };
 

@@ -22,6 +22,8 @@ export const USER_SCHEMAS = gql`
     KID
   }
 
+  scalar JSON
+
   input userInput {
     name: String
   }
@@ -39,10 +41,10 @@ export const USER_SCHEMAS = gql`
   }
 
   input CreateUserInput {
-    name: String
+    username: String
     password: String
     email: String
-    Role: Role
+    preferContact: JSON
   }
 
   input GetAllUserInput {
@@ -129,9 +131,21 @@ export const USER_RESOLVER: IResolvers<any, any> = {
       { db, logger }: contextType,
       __
     ) => {
+      
       try {
-        // 创建唯一的数据
-        await db.collection("users").createIndex({ name: 1 }, { unique: true });
+        if (process.env.DEVELOPMENT !== "dev") {
+          if (args.createUserInput.password.length < 6) {
+            throw new Error("password is too short");
+          }
+        }
+
+        if (process.env.DEVELOPMENT !== "dev") {
+          // 创建唯一的数据
+          await db
+            .collection("users")
+            .createIndex({ name: 1 }, { unique: true });
+        }
+
         const result = await db.collection("users").insertOne({
           ...args.createUserInput,
           password: await encryptionPassword(args.createUserInput.password),
@@ -143,10 +157,9 @@ export const USER_RESOLVER: IResolvers<any, any> = {
           mongo_id: result.insertedId,
         });
       } catch (error) {
-        console.log(error);
         logger.writeError(error);
         return Response.serverResponse({
-          success: true,
+          success: false,
           message: error.message,
         });
       }
@@ -158,7 +171,6 @@ export const USER_RESOLVER: IResolvers<any, any> = {
       { db, redisClient, request }: contextType
     ) => {
       try {
-        console.log({ username, email, password });
         // 缺少需要的信息
         if (!(email || username) || !password)
           throw new Error(CONST_MESSAGE.INCOMPLETE_INFO);
@@ -169,7 +181,11 @@ export const USER_RESOLVER: IResolvers<any, any> = {
         });
 
         // redis 检查是否存在
+        const redus = await Redis_GET(redisClient, email);
+        console.log("redus: ", redus);
+
         if (await Redis_GET(redisClient, email)) {
+          console.log("redis 捕获");
           // 检查token + 更新 token
           return Response.serverResponse({
             message: CONST_MESSAGE.LOGIN_SUCCESS,
@@ -182,7 +198,7 @@ export const USER_RESOLVER: IResolvers<any, any> = {
           .collection("users")
           .findOne({ name: username, email: email });
 
-          console.log(user);
+        console.log(user);
 
         if (!user) {
           throw new Error(CONST_MESSAGE.NO_FOUND_USER);
@@ -193,7 +209,9 @@ export const USER_RESOLVER: IResolvers<any, any> = {
             throw new Error(CONST_MESSAGE.WRONG_PASSWORD);
           }
           const token = JWT.generateJWT(username, password);
+
           await Redis_SET(redisClient, username, token);
+
           return Response.serverResponse({
             message: CONST_MESSAGE.LOGIN_SUCCESS,
             success: true,

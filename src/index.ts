@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 import { ApolloServer } from "apollo-server";
-// const typeDefs = require("./schema"); // 定义了 上！
+
 import { resolvers, schemas } from "./Schema_Resolvers";
 import { contextGenerator } from "./context";
 
@@ -10,7 +10,6 @@ const server = new ApolloServer({
     const contexts = await contextGenerator();
     return { ...contexts, request: req };
   },
-
   typeDefs: schemas,
   resolvers: resolvers,
   playground: {
