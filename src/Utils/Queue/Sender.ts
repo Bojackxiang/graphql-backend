@@ -1,5 +1,7 @@
 const sender_amqp = require("amqplib/callback_api");
 
+type Type_close_connection = () => void;
+
 export const queue_sending_email = () => {
   return new Promise((resolve, reject) => {
     sender_amqp.connect("amqp://localhost", function (
@@ -20,10 +22,11 @@ export const queue_sending_email = () => {
         });
 
         while (i < 10) {
-          await channel.sendToQueue(queueName, Buffer.from(`${message} ${i}`));
+          channel.sendToQueue(queueName, Buffer.from(`${message} ${i}`));
           i += 1;
         }
 
+        // 下面的这个 settimeout 是必须的
         setTimeout(() => {
           connection.close();
         }, 500);
