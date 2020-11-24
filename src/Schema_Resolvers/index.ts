@@ -1,6 +1,8 @@
 import { SchemaTypes, ResolverType } from "src/types/types";
+import { FAKE_DATA_RESOLVER, FAKE_DATA_SCHEMA } from "./FakeDate/Fake_Data_resolver";
 import { GENERAL_RESOLVER, GENERAL_SCHEMA } from "./General/General";
 import { POST_RESOLVER, POST_SCHEMA } from "./Posts/Posts";
+import { SEARCH_RESOLVER, SEARCH_SCHEMA } from "./Search/Search_Resilver";
 import { EMAIL_RESOLVER, EMAIL_SCHEMA } from "./Service/Email";
 
 import {
@@ -14,7 +16,9 @@ export const schemas: SchemaTypes = [
   USER_SCHEMAS,
   FILE_UPLOADING_SCHEMA, 
   POST_SCHEMA, 
-  EMAIL_SCHEMA
+  EMAIL_SCHEMA,
+  SEARCH_SCHEMA, 
+  FAKE_DATA_SCHEMA
 ];
 
 export const resolvers: ResolverType = [
@@ -22,5 +26,7 @@ export const resolvers: ResolverType = [
   USER_RESOLVER,
   FILE_UPLOADING_RESOLVER,
   POST_RESOLVER,
-  EMAIL_RESOLVER
+  EMAIL_RESOLVER,
+  SEARCH_RESOLVER,
+  FAKE_DATA_RESOLVER
 ];

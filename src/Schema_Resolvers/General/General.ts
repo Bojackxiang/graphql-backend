@@ -6,6 +6,7 @@ export const GENERAL_SCHEMA = gql`
     success: Boolean
     updatedId: ID 
     token: String
+    payload: JSObject
   }
   type Query {
     generalQuery: Response

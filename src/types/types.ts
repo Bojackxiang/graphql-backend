@@ -10,5 +10,6 @@ export type ServerResponseInput = {
     message?: string;
     success?: boolean;
     mongo_id?: ObjectId;
-    token?: string
+    token?: string;
+    payload?: any
   };

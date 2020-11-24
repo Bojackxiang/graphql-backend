@@ -6,7 +6,7 @@ import { resolvers, schemas } from "./Schema_Resolvers";
 import { contextGenerator } from "./context";
 import { subscriber } from "./Utils/Queue/Receiver";
 
-subscriber();
+// subscriber();
 
 const server = new ApolloServer({
   context: async ({ req }) => {
