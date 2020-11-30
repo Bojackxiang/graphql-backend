@@ -1,0 +1,1 @@
+export const RENTING_PROPERTIES = 'renting_properties'

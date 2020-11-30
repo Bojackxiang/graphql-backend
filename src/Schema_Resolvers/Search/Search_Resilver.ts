@@ -1,6 +1,8 @@
 import { gql, IResolvers } from "apollo-server";
+import { RENTING_PROPERTIES } from "../../Constants/collections_name";
 import { contextType } from "src/types/userResolverTypes";
 import Response from "../../Utils/Response/Response";
+import { searchInputsType } from "./types";
 import { _cleanSearchQuery } from "./utils";
 
 export const SEARCH_SCHEMA = gql`
@@ -20,36 +22,17 @@ export const SEARCH_SCHEMA = gql`
   }
 `;
 
-type searchInputsType = {
-  searchInputs: {
-    stateInShort: string;
-    city: [string];
-    suburb: [string];
-    code: [string];
-    page: number;
-    size: number;
-  };
-};
-
 export const SEARCH_RESOLVER: IResolvers<any, any> = {
   Query: {
     search: async (_, args: searchInputsType, { db }: contextType) => {
-      // 这边要根据传进来的数据进行处理
-      // 如果没有传进来，后面就不能有 in 中
-      console.log(args);
       const { page, size, ...query } = args.searchInputs;
-      console.log({ page, size });
-
       const cleanedQuery = _cleanSearchQuery(query);
-
       const result = await db
-        .collection("renting_properties")
+        .collection(RENTING_PROPERTIES)
         .find(cleanedQuery)
         .skip(page * size)
         .limit(size)
         .toArray();
-
-      console.log({ result });
 
       return Response.serverResponse({
         success: true,
