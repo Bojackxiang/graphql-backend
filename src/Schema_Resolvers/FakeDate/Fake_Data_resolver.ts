@@ -3,7 +3,7 @@ import { contextType } from "src/types/userResolverTypes";
 import faker, { fake } from "faker";
 import Response from "../../utils/Response/Response";
 import cities from "../../fake_data/fake_data.json";
-import codeAndCity from "../../fake_data/au_postcodes.json";
+
 
 export const FAKE_DATA_SCHEMA = gql`
   extend type Query {
@@ -24,8 +24,6 @@ export const FAKE_DATA_RESOLVER: IResolvers<any, any> = {
         const { city, streetName } = faker.address;
 
         const allCityJson = JSON.parse(JSON.stringify(cities)).data;
-        const postCodeAgainstCityName = JSON.parse(JSON.stringify(codeAndCity))
-          .data;
 
         let collection = [];
 
@@ -33,13 +31,10 @@ export const FAKE_DATA_RESOLVER: IResolvers<any, any> = {
           const randomData = {
             userId: "",
             suburb: [
-              // allCityJson[faker.random.number(allCityJson.length)].suburb,
-              "kensington", 'kingsford',
+              allCityJson[faker.random.number(allCityJson.length)].suburb,
             ],
-            // code: allCityJson[faker.random.number(allCityJson.length)].postcode,
-            code: '2033',
-            // state: allCityJson[faker.random.number(allCityJson.length)].state,
-            state: 'NSW',
+            code: allCityJson[faker.random.number(allCityJson.length)].postcode,
+            state: allCityJson[faker.random.number(allCityJson.length)].state,
             street: faker.address.streetName(),
             country: "Australia",
             unit: `Unit ${faker.random.number(100)}`,

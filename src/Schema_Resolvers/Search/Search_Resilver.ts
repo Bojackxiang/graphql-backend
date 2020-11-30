@@ -11,6 +11,8 @@ export const SEARCH_SCHEMA = gql`
     city: [String]
     suburb: [String]
     code: [String]
+    page: Int
+    size: Int
   }
 
   extend type Query {
@@ -24,6 +26,8 @@ type searchInputsType = {
     city: [string];
     suburb: [string];
     code: [string];
+    page: number;
+    size: number;
   };
 };
 
@@ -32,15 +36,20 @@ export const SEARCH_RESOLVER: IResolvers<any, any> = {
     search: async (_, args: searchInputsType, { db }: contextType) => {
       // 这边要根据传进来的数据进行处理
       // 如果没有传进来，后面就不能有 in 中
-      const query = args.searchInputs;
+      console.log(args);
+      const { page, size, ...query } = args.searchInputs;
+      console.log({ page, size });
 
       const cleanedQuery = _cleanSearchQuery(query);
-      console.log("cleanedQuery: ", cleanedQuery);
 
       const result = await db
         .collection("renting_properties")
         .find(cleanedQuery)
+        .skip(page * size)
+        .limit(size)
         .toArray();
+
+      console.log({ result });
 
       return Response.serverResponse({
         success: true,
