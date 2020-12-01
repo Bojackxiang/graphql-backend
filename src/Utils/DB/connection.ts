@@ -12,9 +12,9 @@ class DBUtils {
     } catch (error) {
       console.log(" ❌ DB Connection error ");
       console.error(error);
-      return null; 
+      return null;
     }
   }
 }
 
-export default DBUtils
+export default DBUtils;

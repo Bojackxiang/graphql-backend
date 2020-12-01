@@ -5,8 +5,16 @@ import { ApolloServer } from "apollo-server";
 import { resolvers, schemas } from "./Schema_Resolvers";
 import { contextGenerator } from "./context";
 import { subscriber } from "./Utils/Queue/Receiver";
+import { Testing } from "./Schema_Resolvers/Testing/Testing";
+import { connect, MongoClient } from "mongodb";
 
-// subscriber();
+// subscriber()
+
+const client = new MongoClient('mongodb://localhost:27017/localtest', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+client.connect();
 
 const server = new ApolloServer({
   context: async ({ req }) => {
@@ -15,6 +23,11 @@ const server = new ApolloServer({
   },
   typeDefs: schemas,
   resolvers: resolvers,
+  dataSources: () => {
+    return {
+      users: new Testing(client.db().collection("users")),
+    };
+  },
   playground: {
     settings: {
       "request.credentials": "include",

@@ -89,7 +89,7 @@ export const USER_RESOLVER: IResolvers<any, any> = {
       logger.writeTrace("this is a message");
 
       const foundUser = await db.collection("users").find().toArray();
-      console.log(foundUser);
+      console.log(foundUser.length);
       return {
         name: "alex",
       };

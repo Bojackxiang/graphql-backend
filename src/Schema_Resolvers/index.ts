@@ -4,6 +4,7 @@ import { GENERAL_RESOLVER, GENERAL_SCHEMA } from "./General/General";
 import { POST_RESOLVER, POST_SCHEMA } from "./Posts/Posts";
 import { SEARCH_RESOLVER, SEARCH_SCHEMA } from "./Search/Search_Resilver";
 import { EMAIL_RESOLVER, EMAIL_SCHEMA } from "./Service/Email";
+import { TESTING_RESOLVER, TESTING_SCHEMA } from "./Testing/Testing";
 
 import {
   FILE_UPLOADING_SCHEMA,
@@ -18,7 +19,8 @@ export const schemas: SchemaTypes = [
   POST_SCHEMA, 
   EMAIL_SCHEMA,
   SEARCH_SCHEMA, 
-  FAKE_DATA_SCHEMA
+  FAKE_DATA_SCHEMA,
+  TESTING_SCHEMA
 ];
 
 export const resolvers: ResolverType = [
@@ -28,5 +30,6 @@ export const resolvers: ResolverType = [
   POST_RESOLVER,
   EMAIL_RESOLVER,
   SEARCH_RESOLVER,
-  FAKE_DATA_RESOLVER
+  FAKE_DATA_RESOLVER, 
+  TESTING_RESOLVER
 ];
