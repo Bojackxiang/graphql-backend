@@ -33,9 +33,7 @@ export const POST_SCHEMA = gql`
     type Post {
         ${sharedPostPiece}
     }
-  ########################################################
-  ####### query input ####################################
-  ########################################################
+  
   input PostGetInput {
     ${sharedPostPiece}
   }
@@ -43,10 +41,6 @@ export const POST_SCHEMA = gql`
   input PostsGetInput {
     name: String
   }
-
-  ########################################################
-  ##### mutation input ###################################
-  ########################################################
   
   input createNewPostInput {
     ${sharedPostPiece}
@@ -64,17 +58,10 @@ export const POST_SCHEMA = gql`
     name: String
   }
 
-  ######################################################
-  ########## query #####################################
-  ######################################################
   extend type Query {
     getPost(getPostInput: PostGetInput): Response
     getPosts(getPostsInput: PostsGetInput): Response
   }
-
-  ########################################################
-  ##### mutation #########################################
-  ########################################################
 
   extend type Mutation {
     # 不剋多个操作
